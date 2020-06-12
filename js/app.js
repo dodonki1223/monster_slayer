@@ -6,10 +6,11 @@ new Vue({
     you: {
       hitPoint: 100,
       attack: 8,
+      heal: 10,
     },
     monster: {
       hitPoint: 100,
-      attack: 6,
+      attack: 7,
     }
   },
   computed: {
@@ -34,6 +35,10 @@ new Vue({
     },
     playSpecialAttack: function() {
       this.monster.hitPoint -= Math.round( (this.you.attack * 1.5) * this.randomValue())
+      this.you.hitPoint -= Math.round(this.monster.attack * this.randomValue())
+    },
+    playHeal: function() {
+      this.you.hitPoint += this.you.heal
       this.you.hitPoint -= Math.round(this.monster.attack * this.randomValue())
     }
   }
