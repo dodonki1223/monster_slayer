@@ -7,47 +7,48 @@
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div id="app">
-  <section class="row">
-    <div class="small-6 columns">
-      <h1 class="text-center">YOU</h1>
-      <div class="healthbar">
-        <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+  <div id="app">
+    <section class="row">
+      <div class="small-6 columns">
+        <h1 class="text-center">YOU</h1>
+        <div class="healthbar">
+          <div class="healthbar text-center" :style="hitPointsYouStyle">
+            {{ hitPoints.you }}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="small-6 columns">
-      <h1 class="text-center">MONSTER</h1>
-      <div class="healthbar">
-        <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+      <div class="small-6 columns">
+        <h1 class="text-center">MONSTER</h1>
+        <div class="healthbar">
+          <div class="healthbar text-center" :style="hitPointsMonsterStyle">
+            {{ hitPoints.monster }}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="row controls">
-    <div class="small-12 columns">
-      <button id="start-game">START NEW GAME</button>
-    </div>
-  </section>
-  <section class="row controls">
-    <div class="small-12 columns">
-      <button id="attack">ATTACK</button>
-      <button id="special-attack">SPECIAL ATTACK</button>
-      <button id="heal">HEAL</button>
-      <button id="give-up">GIVE UP</button>
-    </div>
-  </section>
-  <section class="row log">
-    <div class="small-12 columns">
-      <ul>
-        <li>
+    </section>
+    <section class="row controls" v-if="!gameStarted" @click="gameStarted = !gameStarted">
+      <div class="small-12 columns">
+        <button id="start-game">START NEW GAME</button>
+      </div>
+    </section>
+    <section class="row controls" v-if="gameStarted">
+      <div class="small-12 columns">
+        <button id="attack">ATTACK</button>
+        <button id="special-attack">SPECIAL ATTACK</button>
+        <button id="heal">HEAL</button>
+        <button id="give-up">GIVE UP</button>
+      </div>
+    </section>
+    <section class="row log" v-if="existsLog">
+      <div class="small-12 columns">
+        <ul>
+          <li>
 
-        </li>
-      </ul>
-    </div>
-  </section>
-</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+  <script src="./js/app.js"></script>
 </body>
 </html>
