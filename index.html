@@ -12,16 +12,16 @@
       <div class="small-6 columns">
         <h1 class="text-center">YOU</h1>
         <div class="healthbar">
-          <div class="healthbar text-center" :style="hitPointsYouStyle">
-            {{ hitPoints.you }}
+          <div class="healthbar text-center" :style="hitPointsStyle(you)">
+            {{ you.hitPoint }}
           </div>
         </div>
       </div>
       <div class="small-6 columns">
         <h1 class="text-center">MONSTER</h1>
         <div class="healthbar">
-          <div class="healthbar text-center" :style="hitPointsMonsterStyle">
-            {{ hitPoints.monster }}
+          <div class="healthbar text-center" :style="hitPointsStyle(monster)">
+            {{ monster.hitPoint }}
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
     </section>
     <section class="row controls" v-if="gameStarted">
       <div class="small-12 columns">
-        <button id="attack">ATTACK</button>
+        <button id="attack" @click="playAttack">ATTACK</button>
         <button id="special-attack">SPECIAL ATTACK</button>
         <button id="heal">HEAL</button>
         <button id="give-up">GIVE UP</button>

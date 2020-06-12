@@ -3,27 +3,30 @@ new Vue({
   data: {
     gameStarted: false,
     existsLog: false,
-    hitPoints: {
-      you: 100,
-      monster: 100,
+    you: {
+      hitPoint: 100,
+      attack: 8,
+    },
+    monster: {
+      hitPoint: 100,
+      attack: 6,
     }
   },
   computed: {
-    hitPointsYouStyle: function() {
+  },
+  methods: {
+    hitPointsStyle: function(character) {
       return {
         backgroundColor: 'green',
         margin: 0,
         color: 'white',
-        width: this.hitPoints.you + '%'
+        width: (character.hitPoint <= 0) ? '0px' : character.hitPoint + '%'
       }
     },
-    hitPointsMonsterStyle: function() {
-      return {
-        backgroundColor: 'green',
-        margin: 0,
-        color: 'white',
-        width: this.hitPoints.monster + '%'
-      }
+    playAttack: function() {
+      const randomValue = Math.random() * (1.3 - 1) + 1
+      this.monster.hitPoint -= Math.round(this.you.attack * randomValue)
+      this.you.hitPoint -= Math.round(this.monster.attack * randomValue)
     }
   }
 })
