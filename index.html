@@ -39,12 +39,10 @@
         <button id="give-up" @click="gameStarted = !gameStarted">GIVE UP</button>
       </div>
     </section>
-    <section class="row log" v-if="existsLog">
+    <section class="row log" v-if="displayLogs">
       <div class="small-12 columns">
         <ul>
-          <li>
-
-          </li>
+          <li v-for="(log, index) in reverseLogs" :key=index>{{ log }}</li>
         </ul>
       </div>
     </section>
