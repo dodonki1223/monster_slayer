@@ -24,6 +24,11 @@ new Vue({
         width: (character.hitPoint <= 0) ? '0px' : character.hitPoint + '%'
       }
     },
+    startNewGame: function() {
+      this.gameStarted = !this.gameStarted
+      this.you.hitPoint = 100
+      this.monster.hitPoint = 100
+    },
     randomValue: function() {
       // ref: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_number_between_two_values
       const randomRange = 1.2
