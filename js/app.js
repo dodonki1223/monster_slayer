@@ -23,10 +23,18 @@ new Vue({
         width: (character.hitPoint <= 0) ? '0px' : character.hitPoint + '%'
       }
     },
+    randomValue: function() {
+      // ref: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_number_between_two_values
+      const randomRange = 1.2
+      return Math.random() * (randomRange - 1) + 1
+    },
     playAttack: function() {
-      const randomValue = Math.random() * (1.3 - 1) + 1
-      this.monster.hitPoint -= Math.round(this.you.attack * randomValue)
-      this.you.hitPoint -= Math.round(this.monster.attack * randomValue)
+      this.monster.hitPoint -= Math.round(this.you.attack * this.randomValue())
+      this.you.hitPoint -= Math.round(this.monster.attack * this.randomValue())
+    },
+    playSpecialAttack: function() {
+      this.monster.hitPoint -= Math.round( (this.you.attack * 1.5) * this.randomValue())
+      this.you.hitPoint -= Math.round(this.monster.attack * this.randomValue())
     }
   }
 })
