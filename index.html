@@ -31,7 +31,7 @@
         <button id="start-game">START NEW GAME</button>
       </div>
     </section>
-    <section class="row controls" v-if="gameStarted">
+    <section class="row controls" v-else>
       <div class="small-12 columns">
         <button id="attack" @click="playAttack">ATTACK</button>
         <button id="special-attack" @click="playSpecialAttack">SPECIAL ATTACK</button>
