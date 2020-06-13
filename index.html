@@ -36,7 +36,7 @@
         <button id="attack" @click="playAttack">ATTACK</button>
         <button id="special-attack" @click="playSpecialAttack">SPECIAL ATTACK</button>
         <button id="heal" @click="playHeal">HEAL</button>
-        <button id="give-up" @click="gameStarted = !gameStarted">GIVE UP</button>
+        <button id="give-up" @click="giveUp">GIVE UP</button>
       </div>
     </section>
     <section class="row log" v-if="displayLogs">

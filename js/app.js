@@ -43,10 +43,10 @@ new Vue({
       return Math.random() * (randomRange - 1) + 1
     },
     startNewGame: function() {
+      this.logs = []
       this.gameStarted = true
       this.you.hitPoint = 100
       this.monster.hitPoint = 100
-      this.logs = []
     },
     isEndGame: function() {
       if (this.you.hitPoint <= 0 ) {
@@ -99,7 +99,7 @@ new Vue({
       if (this.runAction(this.you, -attackActionMonster.value)) return
 
       attackActionYou = this.buildAction(this.you, this.monster, this.actionType.attack)
-      this.runAction(this.monster, -attackActionYou.value)
+      if (this.runAction(this.monster, -attackActionYou.value)) return
 
       this.createLog(attackActionMonster, attackActionYou)
     },
@@ -108,7 +108,7 @@ new Vue({
       if (this.runAction(this.you, -attackActionMonster.value)) return
 
       specialAttackActionYou = this.buildAction(this.you, this.monster, this.actionType.specialAttack)
-      this.runAction(this.monster, -specialAttackActionYou.value)
+      if (this.runAction(this.monster, -specialAttackActionYou.value)) return
 
       this.createLog(attackActionMonster, specialAttackActionYou)
     },
@@ -117,9 +117,13 @@ new Vue({
       if (this.runAction(this.you, -attackActionMonster.value)) return
 
       healActionYou = this.buildAction(this.you, this.you, this.actionType.heal)
-      this.runAction(this.you, healActionYou.value)
+      if (this.runAction(this.you, healActionYou.value)) return
 
       this.createLog(attackActionMonster, healActionYou)
+    },
+    giveUp: function() {
+      this.gameStarted = false
+      this.logs        = []
     }
   }
 })
