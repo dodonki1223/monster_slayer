@@ -52,13 +52,19 @@ new Vue({
       if (this.you.hitPoint <= 0 ) {
         if (confirm('You lose! New Game?')) {
           this.startNewGame()
+        } else {
+          this.gameStarted = false
         }
-      }
-      if (this.monster.hitPoint <= 0 ) {
+        return true
+      } else if (this.monster.hitPoint <= 0 ) {
         if (confirm('You win! New Game?')) {
           this.startNewGame()
+        } else {
+          this.gameStarted = false
         }
+        return true
       }
+      return false
     },
     createLog: function(monsterAction, youAction) {
       this.logs.push([monsterAction, youAction])
@@ -85,20 +91,23 @@ new Vue({
     playAttack: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
       this.you.hitPoint  -= attackActionMonster.value
+      if (this.isEndGame()) return
 
       attackActionYou        = this.buildAction(this.you, this.monster, this.actionType.attack)
       this.monster.hitPoint -= attackActionYou.value
+      if (this.isEndGame())
 
       this.createLog(attackActionMonster, attackActionYou)
       this.existsLog = true
-      this.isEndGame()
     },
     playSpecialAttack: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
       this.you.hitPoint  -= attackActionMonster.value
+      if (this.isEndGame()) return
 
       specialAttackActionYou = this.buildAction(this.you, this.monster, this.actionType.specialAttack)
       this.monster.hitPoint -= specialAttackActionYou.value
+      if (this.isEndGame())
 
       this.createLog(attackActionMonster, specialAttackActionYou)
       this.existsLog = true
@@ -107,6 +116,7 @@ new Vue({
     playHeal: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
       this.you.hitPoint  -= attackActionMonster.value
+      if (this.isEndGame()) return
 
       healActionYou      = this.buildAction(this.you, this.you, this.actionType.heal)
       if (this.you.hitPoint + healActionYou.value > 100) {
