@@ -43,7 +43,7 @@ new Vue({
       return Math.random() * (randomRange - 1) + 1
     },
     startNewGame: function() {
-      this.gameStarted = !this.gameStarted
+      this.gameStarted = true
       this.you.hitPoint = 100
       this.monster.hitPoint = 100
       this.logs = []
