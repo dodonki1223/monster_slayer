@@ -124,6 +124,7 @@ new Vue({
     giveUp: function() {
       this.gameStarted = false
       this.logs        = []
+      this.startNewGame()
     }
   }
 })
