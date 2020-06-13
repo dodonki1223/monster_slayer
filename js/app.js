@@ -3,14 +3,21 @@ new Vue({
   data: {
     gameStarted: false,
     logs: [],
+    actionType: {
+      attack: 'HITS',
+      specialAttack: 'SPECIAL HITS',
+      heal: 'HEALS',
+    },
     you: {
+      name: 'PLAYER',
       hitPoint: 100,
-      attack: 8,
+      attack: 9,
       heal: 10,
     },
     monster: {
+      name: 'MONSTER',
       hitPoint: 100,
-      attack: 7,
+      attack: 5,
     }
   },
   computed: {
@@ -53,41 +60,62 @@ new Vue({
         }
       }
     },
-    buildLog: function(fromChara, toChara, actionType, value) {
-      return `${fromChara} ${actionType} ${toChara} FOR ${value}`
+    createLog: function(monsterAction, youAction) {
+      this.logs.push([monsterAction, youAction])
+    },
+    buildAction: function(charaFrom, charaTo, type) {
+      actionValue = 0
+      switch(type) {
+        case this.actionType.attack:
+          actionValue = Math.round(charaFrom.attack * this.randomValue())
+          break
+        case this.actionType.specialAttack:
+          actionValue = Math.round(charaFrom.attack * 1.5 * this.randomValue())
+          break
+        case this.actionType.heal:
+          actionValue = charaFrom.heal
+          break
+      }
+      return {
+        value: actionValue,
+        style: [{'monster-turn': charaFrom.name === this.monster.name}, {'player-turn': charaFrom.name === this.you.name}],
+        text: `${charaFrom.name} ${type} ${charaTo.name} FOR ${actionValue}`
+      }
     },
     playAttack: function() {
-      attackToMonster = Math.round(this.you.attack * this.randomValue())
-      attachToYou     = Math.round(this.monster.attack * this.randomValue())
+      attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
+      this.you.hitPoint  -= attackActionMonster.value
 
-      this.monster.hitPoint -= attackToMonster
-      this.you.hitPoint     -= attachToYou
+      attackActionYou        = this.buildAction(this.you, this.monster, this.actionType.attack)
+      this.monster.hitPoint -= attackActionYou.value
 
-      this.logs.push(this.buildLog('PLAYER', 'MONSTER', 'HITS', attackToMonster))
-      this.logs.push(this.buildLog('MONSTER', 'PLAYER', 'HITS', attachToYou))
+      this.createLog(attackActionMonster, attackActionYou)
       this.existsLog = true
       this.isEndGame()
     },
     playSpecialAttack: function() {
-      attackToMonster = Math.round((this.you.attack * 1.5) * this.randomValue())
-      attachToYou     = Math.round(this.monster.attack * this.randomValue())
+      attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
+      this.you.hitPoint  -= attackActionMonster.value
 
-      this.monster.hitPoint -= attackToMonster
-      this.you.hitPoint     -= attachToYou
+      specialAttackActionYou = this.buildAction(this.you, this.monster, this.actionType.specialAttack)
+      this.monster.hitPoint -= specialAttackActionYou.value
 
-      this.logs.push(this.buildLog('PLAYER', 'MONSTER', 'HITS', attackToMonster))
-      this.logs.push(this.buildLog('MONSTER', 'PLAYER', 'HITS', attachToYou))
+      this.createLog(attackActionMonster, specialAttackActionYou)
       this.existsLog = true
       this.isEndGame()
     },
     playHeal: function() {
-      attachToYou = Math.round(this.monster.attack * this.randomValue())
+      attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
+      this.you.hitPoint  -= attackActionMonster.value
 
-      this.you.hitPoint += this.you.heal
-      this.you.hitPoint -= Math.round(this.monster.attack * this.randomValue())
+      healActionYou      = this.buildAction(this.you, this.you, this.actionType.heal)
+      if (this.you.hitPoint + healActionYou.value > 100) {
+        this.you.hitPoint = 100
+      } else {
+        this.you.hitPoint += healActionYou.value
+      }
 
-      this.logs.push(this.buildLog('PLAYER', 'HIMSELF', 'HEALS', this.you.heal))
-      this.logs.push(this.buildLog('MONSTER', 'PLAYER', 'HITS', attachToYou))
+      this.createLog(attackActionMonster, healActionYou)
       this.existsLog = true
       this.isEndGame()
     }

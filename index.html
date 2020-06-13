@@ -42,7 +42,9 @@
     <section class="row log" v-if="displayLogs">
       <div class="small-12 columns">
         <ul>
-          <li v-for="(log, index) in reverseLogs" :key=index>{{ log }}</li>
+          <template v-for="(log, logsIndex) in reverseLogs">
+            <li v-for="(turn, index) in log" :key="`${logsIndex}-${index}`" :class="turn.style">{{ turn.text }}</li>
+          </template>
         </ul>
       </div>
     </section>
