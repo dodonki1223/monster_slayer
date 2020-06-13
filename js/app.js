@@ -71,6 +71,7 @@ new Vue({
     },
     buildAction: function(charaFrom, charaTo, type) {
       actionValue = 0
+      toName = charaTo.name
       switch(type) {
         case this.actionType.attack:
           actionValue = Math.round(charaFrom.attack * this.randomValue())
@@ -79,55 +80,46 @@ new Vue({
           actionValue = Math.round(charaFrom.attack * 1.5 * this.randomValue())
           break
         case this.actionType.heal:
-          actionValue = charaFrom.heal
+          actionValue =  (charaTo.hitPoint + charaFrom.heal) > 100 ? 100 - charaTo.hitPoint : charaFrom.heal
+          toName = (charaFrom.name === charaTo.name) ? 'HIMSELF' : charaTo.name
           break
       }
       return {
         value: actionValue,
         style: [{'monster-turn': charaFrom.name === this.monster.name}, {'player-turn': charaFrom.name === this.you.name}],
-        text: `${charaFrom.name} ${type} ${charaTo.name} FOR ${actionValue}`
+        text: `${charaFrom.name} ${type} ${toName} FOR ${actionValue}`
       }
+    },
+    runAction: function(chara, value) {
+      chara.hitPoint = chara.hitPoint + value
+      return this.isEndGame()
     },
     playAttack: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
-      this.you.hitPoint  -= attackActionMonster.value
-      if (this.isEndGame()) return
+      if (this.runAction(this.you, -attackActionMonster.value)) return
 
-      attackActionYou        = this.buildAction(this.you, this.monster, this.actionType.attack)
-      this.monster.hitPoint -= attackActionYou.value
-      if (this.isEndGame())
+      attackActionYou = this.buildAction(this.you, this.monster, this.actionType.attack)
+      this.runAction(this.monster, -attackActionYou.value)
 
       this.createLog(attackActionMonster, attackActionYou)
-      this.existsLog = true
     },
     playSpecialAttack: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
-      this.you.hitPoint  -= attackActionMonster.value
-      if (this.isEndGame()) return
+      if (this.runAction(this.you, -attackActionMonster.value)) return
 
       specialAttackActionYou = this.buildAction(this.you, this.monster, this.actionType.specialAttack)
-      this.monster.hitPoint -= specialAttackActionYou.value
-      if (this.isEndGame())
+      this.runAction(this.monster, -specialAttackActionYou.value)
 
       this.createLog(attackActionMonster, specialAttackActionYou)
-      this.existsLog = true
-      this.isEndGame()
     },
     playHeal: function() {
       attackActionMonster = this.buildAction(this.monster, this.you, this.actionType.attack)
-      this.you.hitPoint  -= attackActionMonster.value
-      if (this.isEndGame()) return
+      if (this.runAction(this.you, -attackActionMonster.value)) return
 
-      healActionYou      = this.buildAction(this.you, this.you, this.actionType.heal)
-      if (this.you.hitPoint + healActionYou.value > 100) {
-        this.you.hitPoint = 100
-      } else {
-        this.you.hitPoint += healActionYou.value
-      }
+      healActionYou = this.buildAction(this.you, this.you, this.actionType.heal)
+      this.runAction(this.you, healActionYou.value)
 
       this.createLog(attackActionMonster, healActionYou)
-      this.existsLog = true
-      this.isEndGame()
     }
   }
 })
